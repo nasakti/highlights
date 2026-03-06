@@ -1,4 +1,3 @@
-import "./style.css";
 import {
   esc,
   hlText,
@@ -902,7 +901,9 @@ async function init() {
     </div>`;
 
   try {
-    const resp = await fetch("data.json");
+    // Try Vite-served path first, then fall back to raw repo path
+    let resp = await fetch("data.json").catch(() => null);
+    if (!resp || !resp.ok) resp = await fetch("public/data.json");
     ALL_BOOKS = await resp.json();
   } catch (e) {
     document.getElementById("main").innerHTML = `
